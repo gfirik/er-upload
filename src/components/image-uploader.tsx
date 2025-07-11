@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { Upload, X } from "lucide-react";
 import { Label } from "@/components/ui/label";
 
@@ -11,12 +10,10 @@ export default function ImageUploader({
   images,
   setImages,
 }: ImageUploaderProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleFiles = (files: FileList | null) => {
-    if (!files) return;
-    const newFiles = Array.from(files).slice(0, 5 - images.length);
-    setImages([...images, ...newFiles]);
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const totalFiles = [...images, ...files].slice(0, 5);
+    setImages(totalFiles);
   };
 
   const removeImage = (index: number) => {
@@ -24,45 +21,46 @@ export default function ImageUploader({
   };
 
   return (
-    <div className="space-y-2">
-      <Label>Rasmlar (maks. 5 ta)</Label>
-      <input
-        type="file"
-        accept="image/*"
-        multiple
-        hidden
-        ref={fileInputRef}
-        onChange={(e) => handleFiles(e.target.files)}
-      />
-      <div
-        className="flex h-32 w-full cursor-pointer items-center justify-center rounded-md border border-dashed border-gray-300 bg-muted hover:bg-muted/70"
-        onClick={() => fileInputRef.current?.click()}
-      >
-        <div className="text-center">
-          <Upload className="mx-auto h-6 w-6 text-gray-500" />
-          <p className="text-sm text-gray-500">Rasmlarni yuklash</p>
-        </div>
+    <div className="space-y-4">
+      <Label>Rasmlar</Label>
+      <div className="grid grid-cols-2 gap-4">
+        {images.map((image, index) => (
+          <div key={index} className="relative">
+            <img
+              src={URL.createObjectURL(image)}
+              alt={`Upload ${index + 1}`}
+              className="w-full h-24 object-cover rounded-md"
+            />
+            <button
+              type="button"
+              onClick={() => removeImage(index)}
+              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+            >
+              <X size={14} />
+            </button>
+          </div>
+        ))}
+        <label
+          className={`border-2 border-dashed border-muted-foreground/25 rounded-md p-4 flex flex-col items-center justify-center cursor-pointer transition-colors h-24 ${
+            images.length >= 6
+              ? "opacity-50 cursor-not-allowed"
+              : "hover:bg-muted/50"
+          }`}
+        >
+          <Upload size={24} className="text-muted-foreground mb-2" />
+          <span className="text-sm text-muted-foreground">
+            {images.length >= 5 ? "Limit 5 ta rasm" : "Rasm yuklash"}
+          </span>
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="hidden"
+            disabled={images.length >= 5}
+          />
+        </label>
       </div>
-
-      {images.length > 0 && (
-        <div className="grid grid-cols-3 gap-2">
-          {images.map((img, index) => (
-            <div key={index} className="relative">
-              <img
-                src={URL.createObjectURL(img)}
-                className="h-24 w-full rounded-md object-cover border"
-              />
-              <button
-                type="button"
-                className="absolute top-1 right-1 rounded-full bg-red-500 text-white p-0.5"
-                onClick={() => removeImage(index)}
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

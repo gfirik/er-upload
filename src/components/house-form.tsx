@@ -1,112 +1,162 @@
-import { useState } from "react";
-import ImageUploader from "@/components/image-uploader";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { koreaLocations } from "@/data/locations";
+import ImageUploader from "@/components/image-uploader";
+import RoommateToggle from "@/components/roommate-toggle";
+import LocationSelector from "@/components/location-selector";
+import { useTelegram } from "@/hooks/useTelegram";
+import type { HouseFormData } from "@/types/house";
 
 export default function HouseForm() {
-  const [city, setCity] = useState("");
-  const [district, setDistrict] = useState("");
-  const [images, setImages] = useState<File[]>([]);
+  const { setMainButtonParams, onMainButtonClick, closeApp } = useTelegram();
 
-  const cities = Object.keys(koreaLocations);
-  const districts = city ? koreaLocations[city] : [];
+  const [formData, setFormData] = useState<HouseFormData>({
+    city: "",
+    district: "",
+    address: "",
+    rentPrice: "",
+    deposit: "",
+    floor: "",
+    area: "",
+    description: "",
+    phoneNumber: "",
+    lookingForRoommate: false,
+    images: [],
+  });
 
+  const isFormValid =
+    !!formData.city && !!formData.district && !!formData.address;
+
+  useEffect(() => {
+    setMainButtonParams({ is_active: isFormValid });
+  }, [isFormValid, setMainButtonParams]);
+
+  useEffect(() => {
+    onMainButtonClick(handleSubmit);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleSubmit = () => {
+    if (!isFormValid) return;
+    console.log("Form submitted", formData);
+    alert("Uy muvaffaqiyatli joylashtirildi!");
+    setTimeout(closeApp, 1500);
+  };
+
+  const updateFormData = (field: keyof HouseFormData, value: unknown) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
   return (
-    <div className="min-h-screen bg-muted py-4 px-2">
+    <div className="min-h-screen text-foreground py-4 px-2">
       <div className="max-w-md mx-auto">
-        <Card>
+        <Card className="text-accent-foreground">
           <CardHeader>
-            <CardTitle className="text-center text-lg font-bold text-blue-600">
-              Ijaraga uy!
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-center text-lg font-bold text-primary flex-1">
+                Ijaraga uy!
+              </CardTitle>
+            </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            <ImageUploader images={images} setImages={setImages} />
-            <div className="space-y-2">
-              <Label>Shahar</Label>
-              <Select value={city} onValueChange={setCity}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select city" />
-                </SelectTrigger>
-                <SelectContent>
-                  {cities.map((city) => (
-                    <SelectItem key={city} value={city}>
-                      {city}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <ImageUploader
+              images={formData.images}
+              setImages={(images) => updateFormData("images", images)}
+            />
+
+            <RoommateToggle
+              lookingForRoommate={formData.lookingForRoommate}
+              setLookingForRoommate={(value) =>
+                updateFormData("lookingForRoommate", value)
+              }
+            />
+
+            <LocationSelector
+              city={formData.city}
+              district={formData.district}
+              setCity={(city) => updateFormData("city", city)}
+              setDistrict={(district) => updateFormData("district", district)}
+            />
 
             <div className="space-y-2">
-              <Label>Tuman</Label>
-              <Select
-                value={district}
-                onValueChange={setDistrict}
-                disabled={!city}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Tumanni tanlang" />
-                </SelectTrigger>
-                <SelectContent>
-                  {districts.map((d) => (
-                    <SelectItem key={d} value={d}>
-                      {d}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Manzil</Label>
-              <Input placeholder="Ko'cha yoki mavze bo'yicha" />
+              <Label className="text-muted-foreground">Manzil</Label>
+              <Input
+                className="bg-input border border-border text-foreground"
+                placeholder="Ko'cha yoki mavze bo'yicha"
+                value={formData.address}
+                onChange={(e) => updateFormData("address", e.target.value)}
+              />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Ijara haqi (₩)</Label>
-                <Input type="number" placeholder="e.g. 1000000" />
+                <Label className="text-muted-foreground">Ijara haqi (₩)</Label>
+                <Input
+                  type="number"
+                  className="bg-input border border-border text-foreground"
+                  placeholder="e.g. 1000000"
+                  value={formData.rentPrice}
+                  onChange={(e) => updateFormData("rentPrice", e.target.value)}
+                />
               </div>
               <div className="space-y-2">
-                <Label>Garov puli (₩)</Label>
-                <Input type="number" placeholder="e.g. 5000000" />
+                <Label className="text-muted-foreground">Garov puli (₩)</Label>
+                <Input
+                  type="number"
+                  className="bg-input border border-border text-foreground"
+                  placeholder="e.g. 5000000"
+                  value={formData.deposit}
+                  onChange={(e) => updateFormData("deposit", e.target.value)}
+                />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Qavat</Label>
-                <Input type="number" placeholder="e.g. 3" />
+                <Label className="text-muted-foreground">Qavat</Label>
+                <Input
+                  type="number"
+                  className="bg-input border border-border text-foreground"
+                  placeholder="e.g. 3"
+                  value={formData.floor}
+                  onChange={(e) => updateFormData("floor", e.target.value)}
+                />
               </div>
               <div className="space-y-2">
-                <Label>Maydon (m²)</Label>
-                <Input type="number" placeholder="e.g. 45" />
+                <Label className="text-muted-foreground">Maydon (m²)</Label>
+                <Input
+                  type="number"
+                  className="bg-input border border-border text-foreground"
+                  placeholder="e.g. 45"
+                  value={formData.area}
+                  onChange={(e) => updateFormData("area", e.target.value)}
+                />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label>Tavsif</Label>
-              <Textarea placeholder="Uy haqida qo'shimcha ma'lumotlar..." />
+              <Label className="text-muted-foreground">Tavsif</Label>
+              <Textarea
+                className="bg-input border border-border text-foreground"
+                placeholder="Uy haqida qo'shimcha ma'lumotlar..."
+                value={formData.description}
+                onChange={(e) => updateFormData("description", e.target.value)}
+              />
             </div>
 
             <div className="space-y-2">
-              <Label>Raqam</Label>
-              <Input placeholder="e.g. +82 10-1234-5678" />
+              <Label className="text-muted-foreground">Raqam</Label>
+              <Input
+                className="bg-input border border-border text-foreground"
+                placeholder="e.g. +82 10-1234-5678"
+                value={formData.phoneNumber}
+                onChange={(e) => updateFormData("phoneNumber", e.target.value)}
+              />
             </div>
-
-            <Button className="w-full mt-4">Joylash</Button>
           </CardContent>
         </Card>
       </div>
