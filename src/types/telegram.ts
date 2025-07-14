@@ -42,6 +42,7 @@ export interface TelegramWebApp {
   close: () => void;
   expand: () => void;
   isExpanded: boolean;
+  showAlert?: (message: string, callback?: () => void) => void;
 }
 
 declare global {

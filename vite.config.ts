@@ -12,6 +12,27 @@ export default defineConfig({
     },
   },
   server: {
-    allowedHosts: ["localhost", "f9f21f6e3363.ngrok-free.app"],
+    allowedHosts: [
+      "localhost",
+      "13200816fb54.ngrok-free.app",
+      "er-upload.vercel.app",
+    ],
+    proxy: {
+      "/__log": {
+        target: "http://localhost:5173", // Your dev server
+        configure: (proxy) => {
+          proxy.on("proxyReq", (_proxyReq, req) => {
+            if (req.method === "POST") {
+              let body = "";
+              req.on("data", (chunk) => (body += chunk));
+              req.on("end", () => {
+                const parsed = JSON.parse(body);
+                console.log("[REMOTE LOG]", ...parsed.log);
+              });
+            }
+          });
+        },
+      },
+    },
   },
 });

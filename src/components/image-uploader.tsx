@@ -1,5 +1,6 @@
 import { Upload, X } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import { useEffect } from "react";
 
 interface ImageUploaderProps {
   images: File[];
@@ -19,6 +20,14 @@ export default function ImageUploader({
   const removeImage = (index: number) => {
     setImages(images.filter((_, i) => i !== index));
   };
+
+  useEffect(() => {
+    return () => {
+      images.forEach((file: File) =>
+        URL.revokeObjectURL(URL.createObjectURL(file))
+      );
+    };
+  }, [images]);
 
   return (
     <div className="space-y-4">
@@ -40,26 +49,20 @@ export default function ImageUploader({
             </button>
           </div>
         ))}
-        <label
-          className={`border-2 border-dashed border-muted-foreground/25 rounded-md p-4 flex flex-col items-center justify-center cursor-pointer transition-colors h-24 ${
-            images.length >= 6
-              ? "opacity-50 cursor-not-allowed"
-              : "hover:bg-muted/50"
-          }`}
-        >
-          <Upload size={24} className="text-muted-foreground mb-2" />
-          <span className="text-sm text-muted-foreground">
-            {images.length >= 5 ? "Limit 5 ta rasm" : "Rasm yuklash"}
-          </span>
-          <input
-            type="file"
-            multiple
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="hidden"
-            disabled={images.length >= 5}
-          />
-        </label>
+        {images.length < 5 && (
+          <label className="border-2 border-dashed border-muted-foreground/25 rounded-md p-4 flex flex-col items-center justify-center cursor-pointer transition-colors h-24 hover:bg-muted/50">
+            <Upload size={24} className="text-muted-foreground mb-2" />
+            <span className="text-sm text-muted-foreground">Rasm yuklash</span>
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="hidden"
+              disabled={images.length >= 5}
+            />
+          </label>
+        )}
       </div>
     </div>
   );
