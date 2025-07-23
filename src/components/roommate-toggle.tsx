@@ -11,14 +11,19 @@ export default function RoommateToggle({
   setLookingForRoommate,
 }: RoommateToggleProps) {
   return (
-    <div className="flex items-center justify-between p-4 border rounded-lg bg-card">
+    <div className="flex items-center justify-between">
       <div className="space-y-1">
-        <Label className="text-sm font-medium">Xonadosh qidiryapsizmi?</Label>
+        <Label className="text-sm font-medium text-foreground">
+          Xonadosh qidiryapsizmi?
+        </Label>
       </div>
-      <Switch
-        checked={lookingForRoommate}
-        onCheckedChange={setLookingForRoommate}
-      />
+      <div className="flex items-center">
+        <Switch
+          checked={lookingForRoommate}
+          onCheckedChange={setLookingForRoommate}
+          className="data-[state=checked]:bg-primary data-[state=unchecked]:bg-muted border-2 border-border/50 shadow-sm"
+        />
+      </div>
     </div>
   );
 }
