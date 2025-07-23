@@ -229,13 +229,17 @@ export default function HomePage() {
                   updateFilter("shahar", value === "all" ? "" : value)
                 }
               >
-                <SelectTrigger className="min-w-[140px] bg-input border-border/50">
+                <SelectTrigger className="min-w-[140px] bg-input border border-border/50">
                   <SelectValue placeholder="Shahar" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white dark:bg-background border border-border shadow-md rounded-md">
                   <SelectItem value="all">Barcha shaharlar</SelectItem>
                   {cities.map((city) => (
-                    <SelectItem key={city} value={city}>
+                    <SelectItem
+                      key={city}
+                      value={city}
+                      className="hover:bg-muted focus:bg-muted"
+                    >
                       {city}
                     </SelectItem>
                   ))}
@@ -248,13 +252,17 @@ export default function HomePage() {
                   updateFilter("tuman", value === "all" ? "" : value)
                 }
               >
-                <SelectTrigger className="min-w-[140px] bg-input border-border/50">
+                <SelectTrigger className="min-w-[140px] bg-input border border-border/50">
                   <SelectValue placeholder="Tuman" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white dark:bg-background border border-border shadow-md rounded-md">
                   <SelectItem value="all">Barcha tumanlar</SelectItem>
                   {districts.map((district) => (
-                    <SelectItem key={district} value={district}>
+                    <SelectItem
+                      key={district}
+                      value={district}
+                      className="hover:bg-muted focus:bg-muted"
+                    >
                       {district}
                     </SelectItem>
                   ))}

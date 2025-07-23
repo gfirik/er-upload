@@ -36,6 +36,10 @@ export const useTelegram = () => {
     tg?.MainButton.onClick(callback);
   };
 
+  const hideMainButton = () => {
+    tg?.MainButton.hide();
+  };
+
   const closeApp = () => tg?.close();
 
   return {
@@ -43,5 +47,6 @@ export const useTelegram = () => {
     closeApp,
     setMainButtonParams,
     onMainButtonClick,
+    hideMainButton,
   };
 };

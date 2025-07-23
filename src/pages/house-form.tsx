@@ -133,7 +133,7 @@ export default function HouseForm() {
 
       log("[Success] House inserted successfully");
       tg?.showAlert?.("Uy muvaffaqiyatli joylashtirildi!");
-      setTimeout(closeApp, 1500);
+      setTimeout(() => navigate("/"), 1500);
     } catch (error: unknown) {
       log("[Submission Error]", error);
 
