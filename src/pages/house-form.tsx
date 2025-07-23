@@ -11,6 +11,9 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { log } from "@/lib/logger";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const houseSchema = z.object({
   telegram_id: z.number(),
@@ -19,7 +22,7 @@ const houseSchema = z.object({
   manzil: z.string(),
   oylik: z.string().transform(Number),
   garov_puli: z.string().transform(Number),
-  maydon: z.string().transform(Number),
+  xonalar_soni: z.string().transform(Number),
   qavat: z.string().transform(Number),
   tavsif: z.string().optional(),
   contact: z.object({ phone: z.string() }),
@@ -30,7 +33,7 @@ const houseSchema = z.object({
 export default function HouseForm() {
   const { tg, setMainButtonParams, onMainButtonClick, closeApp } =
     useTelegram();
-
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<HouseFormData>({
     city: "",
     district: "",
@@ -38,7 +41,7 @@ export default function HouseForm() {
     rentPrice: "",
     deposit: "",
     floor: "",
-    area: "",
+    xonalar_soni: "",
     description: "",
     phoneNumber: "",
     lookingForRoommate: false,
@@ -108,7 +111,7 @@ export default function HouseForm() {
         manzil: formData.address,
         oylik: formData.rentPrice,
         garov_puli: formData.deposit,
-        maydon: formData.area,
+        xonalar_soni: formData.xonalar_soni,
         qavat: formData.floor,
         tavsif: formData.description,
         contact: { phone: formData.phoneNumber },
@@ -208,8 +211,17 @@ export default function HouseForm() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 text-foreground py-6 px-4">
       <div className="max-w-lg mx-auto">
         {/* Header Section */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-primary to-accent rounded-2xl mb-4 shadow-lg">
+        <div className="relative mb-8 flex flex-col items-center text-center">
+          <Button
+            onClick={() => navigate("/")}
+            variant="ghost"
+            className="absolute left-2 top-1 flex items-center gap-1 text-muted-foreground"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Orqaga
+          </Button>
+
+          <div className="mt-2 inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-primary to-accent rounded-2xl mb-4 shadow-lg">
             <svg
               className="w-8 h-8 text-white"
               fill="none"
@@ -230,6 +242,7 @@ export default function HouseForm() {
               />
             </svg>
           </div>
+
           <h1 className="text-2xl font-bold text-foreground mb-2">
             Uy ijarasi
           </h1>
@@ -356,14 +369,16 @@ export default function HouseForm() {
                 </div>
                 <div className="space-y-2">
                   <Label className="text-xs text-muted-foreground">
-                    Maydon (m²)
+                    Xonalar soni
                   </Label>
                   <Input
                     type="number"
                     className="bg-input border-border/50 focus:border-primary/50 focus:ring-primary/20 transition-all duration-200"
-                    placeholder="45"
-                    value={formData.area}
-                    onChange={(e) => updateFormData("area", e.target.value)}
+                    placeholder="3"
+                    value={formData.xonalar_soni}
+                    onChange={(e) =>
+                      updateFormData("xonalar_soni", e.target.value)
+                    }
                   />
                 </div>
               </div>

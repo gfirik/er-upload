@@ -5,7 +5,7 @@ export interface HouseFormData {
   rentPrice: string;
   deposit: string;
   floor: string;
-  area: string;
+  xonalar_soni: string;
   description: string;
   phoneNumber: string;
   lookingForRoommate: boolean;
