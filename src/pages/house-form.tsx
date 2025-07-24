@@ -1,8 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import { z } from "zod";
 import { useTelegram } from "@/hooks/useTelegram";
 import { supabase } from "@/lib/supabase";
-import type { HouseFormData } from "@/types/house";
+import { houseSchema, type HouseFormData } from "@/types/house";
 import ImageUploader from "@/components/image-uploader";
 import RoommateToggle from "@/components/roommate-toggle";
 import LocationSelector from "@/components/location-selector";
@@ -14,21 +13,6 @@ import { log } from "@/lib/logger";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-const houseSchema = z.object({
-  telegram_id: z.number(),
-  shahar: z.string(),
-  tuman: z.string(),
-  manzil: z.string(),
-  oylik: z.string().transform(Number),
-  garov_puli: z.string().transform(Number),
-  xonalar_soni: z.string().transform(Number),
-  qavat: z.string().transform(Number),
-  tavsif: z.string().optional(),
-  contact: z.object({ phone: z.string() }),
-  xonadosh_bolish: z.boolean(),
-  images: z.array(z.string()),
-});
 
 export default function HouseForm() {
   const { tg, setMainButtonParams, onMainButtonClick, closeApp } =

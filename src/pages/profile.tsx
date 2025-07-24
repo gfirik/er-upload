@@ -140,7 +140,10 @@ export default function Profile() {
             <p className="text-muted-foreground mb-4">
               Birinchi e'loningizni joylashtiring
             </p>
-            <Button className="bg-gradient-to-r from-primary to-accent text-white">
+            <Button
+              onClick={() => navigate("/new")}
+              className="bg-gradient-to-r from-primary to-accent text-white"
+            >
               <Plus className="w-4 h-4 mr-2" />
               Yangi e'lon
             </Button>

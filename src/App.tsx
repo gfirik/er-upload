@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import HomePage from "./pages/home";
 import Profile from "./pages/profile";
+import House from "./pages/house";
 
 function App() {
   const { tg, hideMainButton } = useTelegram();
@@ -28,6 +29,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/new" element={<HouseForm />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/house/:id" element={<House />} />
       </Routes>
     </div>
   );

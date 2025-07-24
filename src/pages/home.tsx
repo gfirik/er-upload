@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
+import type { House } from "@/types/house";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,32 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  MapPin,
-  Users,
-  Phone,
-  Home,
-  Square,
-  Layers,
-  Plus,
-  User,
-} from "lucide-react";
-
-interface House {
-  id: number;
-  shahar: string;
-  tuman: string;
-  manzil: string;
-  oylik: number;
-  garov_puli: number;
-  xonalar_soni: number;
-  qavat: number;
-  tavsif?: string;
-  contact: { phone: string };
-  xonadosh_bolish: boolean;
-  images: string[];
-  created_at: string;
-}
+import { MapPin, Users, Home, Square, Layers, Plus, User } from "lucide-react";
 
 interface FilterState {
   shahar: string;
@@ -151,9 +127,8 @@ export default function HomePage() {
     return new Intl.NumberFormat("ko-KR").format(price);
   };
 
-  const handleCardClick = (houseId: number) => {
-    // TODO: Navigate to house details page
-    console.log("Navigate to house:", houseId);
+  const handleCardClick = (houseId: string) => {
+    navigate(`/house/${houseId}`);
   };
 
   if (loading) {
@@ -186,19 +161,6 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <div className="p-6">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-primary to-accent rounded-2xl mb-4 shadow-lg">
-            <Home className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-2xl font-bold text-foreground mb-2">
-            Uylar ro'yxati
-          </h1>
-          <p className="text-muted-foreground">
-            {filteredHouses.length} ta uy topildi
-          </p>
-        </div>
-
         {/* Action Buttons */}
         <div className="flex justify-between items-center mb-6 gap-4">
           <Button
@@ -312,6 +274,19 @@ export default function HomePage() {
           </CardContent>
         </Card>
 
+        {/* Header  */}
+        <div className="text-center mb-8">
+          {/* <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-primary to-accent rounded-2xl mb-4 shadow-lg">
+            <Home className="w-8 h-8 text-white" />
+          </div> */}
+          {/* <h1 className="text-2xl font-bold text-foreground mb-2">
+            Uylar ro'yxati
+          </h1> */}
+          <p className="text-muted-foreground">
+            Bizda jami {filteredHouses.length} ta uy topildi
+          </p>
+        </div>
+
         {/* Houses Grid */}
         {filteredHouses.length === 0 ? (
           <div className="text-center py-12">
@@ -391,26 +366,11 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                  {/* Description */}
-                  {house.tavsif && (
-                    <p className="text-xs text-muted-foreground line-clamp-2">
-                      {house.tavsif}
-                    </p>
-                  )}
-
                   {/* Footer */}
                   <div className="flex items-center justify-between pt-2 border-t border-border/50">
                     <div className="text-xs text-muted-foreground">
                       Garov: ₩{formatPrice(house.garov_puli)}
                     </div>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="text-primary hover:text-primary/80"
-                    >
-                      <Phone className="w-3 h-3 mr-1" />
-                      Aloqa
-                    </Button>
                   </div>
                 </CardContent>
               </Card>
