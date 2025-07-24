@@ -14,7 +14,7 @@ export default defineConfig({
   server: {
     allowedHosts: [
       "localhost",
-      "8f5cb3cf5f47.ngrok-free.app",
+      "aebc5c643a10.ngrok-free.app",
       "er-upload.vercel.app",
     ],
     proxy: {

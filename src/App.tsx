@@ -7,7 +7,7 @@ import Profile from "./pages/profile";
 import House from "./pages/house";
 
 function App() {
-  const { tg, hideMainButton } = useTelegram();
+  const { tg } = useTelegram();
   const location = useLocation();
 
   useEffect(() => {
@@ -16,12 +16,12 @@ function App() {
     tg.ready();
     tg.expand();
 
+    tg.MainButton.hide();
+
     if (location.pathname === "/new") {
       tg.MainButton.show();
-    } else {
-      hideMainButton();
     }
-  }, [tg, location, hideMainButton]);
+  }, [tg, location.pathname]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
